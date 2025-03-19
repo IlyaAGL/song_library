@@ -13,7 +13,7 @@ func GetIdSongsByPage(filter Song, limit int, offset int, conn *sql.DB) ([]Song,
 
 	rows, err := conn.Query(
 		`SELECT artist, name 
-         FROM Library 
+         FROM MusicLibrary 
          WHERE 
              ($1 = '' OR artist = $1) AND ($2 = '' OR name = $2) 
          LIMIT $3 OFFSET $4`,
@@ -78,7 +78,7 @@ func DeleteSongByDetails(group, song string, conn *sql.DB) (bool, error) {
 	Log.Debug("Deleting song by details", "group", group, "song", song)
 
 	_, err := conn.Exec(
-		`DELETE FROM Library WHERE artist = $1 AND name = $2`,
+		`DELETE FROM MusicLibrary WHERE artist = $1 AND name = $2`,
 		group, song,
 	)
 
@@ -97,7 +97,7 @@ func UpdateSongByDetails(id int, group, song string, conn *sql.DB) (bool, error)
 	Log.Debug("Updating song by details", "id", id, "group", group, "song", song)
 
 	_, err := conn.Exec(
-		`UPDATE Library SET artist = $1, name = $2 WHERE id = $3`,
+		`UPDATE MusicLibrary SET artist = $1, name = $2 WHERE id = $3`,
 		group, song, id,
 	)
 
@@ -117,7 +117,7 @@ func AddNewSong(song Song, details SongDetails, conn *sql.DB) (bool, error) {
 
 	var id int
 	err := conn.QueryRow(
-		`INSERT INTO Library ("artist", "name") VALUES ($1, $2) RETURNING ID`,
+		`INSERT INTO MusicLibrary ("artist", "name") VALUES ($1, $2) RETURNING ID`,
 		song.Group, song.Name,
 	).Scan(&id)
 
