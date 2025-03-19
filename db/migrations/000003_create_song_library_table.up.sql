@@ -1,0 +1,13 @@
+CREATE TABLE MusicLibrary (
+  id SERIAL PRIMARY KEY,
+  artist VARCHAR(255) NOT NULL,
+  name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Song_details (
+  id SERIAL PRIMARY KEY,
+  releaseDate VARCHAR(255) NOT NULL,
+  text VARCHAR(255) NOT NULL,
+  song_link VARCHAR(255) NOT NULL,
+  FOREIGN KEY (id) REFERENCES MusicLibrary(id) ON DELETE CASCADE
+);

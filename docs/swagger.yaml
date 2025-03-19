@@ -1,0 +1,193 @@
+basePath: /
+definitions:
+  github_com_agl_music_library_internal_domain_entities.Song:
+    properties:
+      group:
+        example: Muse
+        type: string
+      song:
+        example: Hysteria
+        type: string
+    type: object
+  github_com_agl_music_library_internal_domain_entities.SongDetails:
+    description: Extended song metadata
+    properties:
+      link:
+        example: https://www.youtube.com/watch?v=3dm_5qWWDV8
+        type: string
+      releaseDate:
+        example: "2003-09-15"
+        type: string
+      text:
+        example: It's bugging me, grating me
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API for managing songs and their metadata
+  title: Music Library API
+  version: 1.0.0
+paths:
+  /new-song:
+    post:
+      consumes:
+      - application/json
+      description: Create a new song and fetch its details
+      parameters:
+      - description: New song data
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_agl_music_library_internal_domain_entities.Song'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_agl_music_library_internal_domain_entities.SongDetails'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Add a new song
+      tags:
+      - Songs
+  /song:
+    delete:
+      consumes:
+      - application/json
+      description: Remove a song from the library
+      parameters:
+      - description: Song to delete
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_agl_music_library_internal_domain_entities.Song'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a song
+      tags:
+      - Songs
+  /song-text:
+    get:
+      description: Retrieve the text of a song based on group and song name
+      parameters:
+      - description: Group name
+        in: query
+        name: group
+        required: true
+        type: string
+      - description: Song title
+        in: query
+        name: song
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get song text
+      tags:
+      - Songs
+  /songs:
+    get:
+      description: Get songs with pagination and filtering
+      parameters:
+      - description: Page number (starts from 1)
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Filter by group name
+        in: query
+        name: group
+        type: string
+      - description: Filter by song title
+        in: query
+        name: title
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_agl_music_library_internal_domain_entities.Song'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get multiple songs
+      tags:
+      - Songs
+  /updated-song/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update an existing song by ID
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated song data
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_agl_music_library_internal_domain_entities.Song'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update a song
+      tags:
+      - Songs
+swagger: "2.0"
